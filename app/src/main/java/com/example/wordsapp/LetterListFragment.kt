@@ -34,7 +34,6 @@ class LetterListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentLetterListBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -58,12 +57,16 @@ class LetterListFragment : Fragment() {
     }
 
     private fun chooseLayout() {
-        if(isLinearLayoutManager){
-            recyclerView.layoutManager = LinearLayoutManager(context)
-        } else {
-            recyclerView.layoutManager = GridLayoutManager(context, 4)
+        when (isLinearLayoutManager) {
+            true -> {
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.adapter = LetterAdapter()
+            }
+            false -> {
+                recyclerView.layoutManager = GridLayoutManager(context, 4)
+                recyclerView.adapter = LetterAdapter()
+            }
         }
-        recyclerView.adapter = LetterAdapter()
     }
 
     private fun setIcon(menuItem: MenuItem?) {
@@ -79,15 +82,13 @@ class LetterListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_switch_layout -> {
-                // Sets isLinearLayoutManager (a Boolean) to the opposite value
                 isLinearLayoutManager = !isLinearLayoutManager
-                // Sets layout and icon
                 chooseLayout()
                 setIcon(item)
 
                 return true
             }
-            //  Otherwise, do nothing and use the core event handling
+
             else -> super.onOptionsItemSelected(item)
         }
     }
